@@ -331,3 +331,151 @@ main {
     border-radius: 0 0 16px 16px;
     background: linear-gradient(135deg, var(--light-color), var(--background-secondary));
 }
+
+/* Badge color improvements */
+.badge.bg-success {
+    background: linear-gradient(135deg, var(--success-color), #22C55E) !important;
+}
+
+.badge.bg-warning {
+    background: linear-gradient(135deg, var(--warning-color), #FCD34D) !important;
+}
+
+.badge.bg-danger {
+    background: linear-gradient(135deg, var(--danger-color), #F87171) !important;
+}
+
+.badge.bg-info {
+    background: linear-gradient(135deg, var(--info-color), #38BDF8) !important;
+}
+
+.badge.bg-secondary {
+    background: linear-gradient(135deg, var(--text-secondary), #94A3B8) !important;
+}
+
+.badge.bg-light {
+    background: linear-gradient(135deg, var(--light-color), #F1F5F9) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Table improvements */
+.table {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.table thead th {
+    background: linear-gradient(135deg, var(--background-secondary), var(--light-color));
+    color: var(--text-primary);
+    font-weight: 600;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.table tbody tr {
+    transition: all 0.3s ease;
+}
+
+.table tbody tr:hover {
+    background: var(--background-secondary);
+    transform: translateY(-1px);
+}
+
+/* Alert color improvements */
+.alert-info {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(6, 182, 212, 0.05));
+    border-color: rgba(6, 182, 212, 0.3);
+    color: var(--info-color);
+}
+
+.alert-success {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
+    border-color: rgba(16, 185, 129, 0.3);
+    color: var(--success-color);
+}
+
+.alert-warning {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.05));
+    border-color: rgba(245, 158, 11, 0.3);
+    color: var(--warning-color);
+}
+
+.alert-danger {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05));
+    border-color: rgba(239, 68, 68, 0.3);
+    color: var(--danger-color);
+}
+
+/* Form improvements */
+.form-control {
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--background-primary);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    background: var(--background-primary);
+    color: var(--text-primary);
+}
+
+.form-select {
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--background-primary);
+    color: var(--text-primary);
+}
+
+.form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(79, 70, 229, 0.25);
+}
+
+/* Navbar improvements */
+.navbar-dark .navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.9);
+    transition: all 0.3s ease;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: rgba(255, 255, 255, 1);
+    transform: translateY(-1px);
+}
+
+.navbar-dark .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.dropdown-menu {
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+    background: var(--background-primary);
+}
+
+.dropdown-item {
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+.dropdown-item:hover {
+    background: var(--background-secondary);
+    color: var(--text-primary);
+}
+
+/* Text improvements */
+.text-muted {
+    color: var(--text-secondary) !important;
+}
+
+/* Progress bar improvements */
+.progress {
+    background: var(--background-secondary);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+}

@@ -4,9 +4,7 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-md-12">
-        <h1 class="mb-4">🎯 Reto del mes: {{ "Julio" }}</h1>
-        
+    <div class="col-md-12">        
         {% if not current_user %}
         <div class="alert alert-info">
             <strong>¡Bienvenido!</strong> <a href="/login">Inicia sesión</a> o <a href="/register">regístrate</a> para comenzar a marcar tu progreso.

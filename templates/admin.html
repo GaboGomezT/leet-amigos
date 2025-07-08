@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+
+{% block title %}Panel Admin - LeetCode Amigos{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1 class="mb-4">🛠️ Panel de Administración</h1>
+        
+        {% if error %}
+        <div class="alert alert-danger">
+            {{ error }}
+        </div>
+        {% endif %}
+        
+        {% if success %}
+        <div class="alert alert-success">
+            {{ success }}
+        </div>
+        {% endif %}
+        
+        {% if csv_errors %}
+        <div class="alert alert-warning">
+            <strong>Errores encontrados en el CSV:</strong>
+            <ul class="mb-0">
+                {% for error in csv_errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Agregar Nuevo Problema</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" action="/admin/problems">
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Título del Problema</label>
+                                <input type="text" class="form-control" id="title" name="title" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="url" class="form-label">URL del Problema</label>
+                                <input type="url" class="form-control" id="url" name="url" required>
+                                <div class="form-text">URL completa de LeetCode</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="solution_url" class="form-label">URL de la Solución (opcional)</label>
+                                <input type="url" class="form-control" id="solution_url" name="solution_url">
+                                <div class="form-text">Link a video explicativo o blog</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="difficulty" class="form-label">Dificultad</label>
+                                <select class="form-select" id="difficulty" name="difficulty" required>
+                                    <option value="">Selecciona la dificultad</option>
+                                    <option value="easy">🟢 Fácil</option>
+                                    <option value="medium">🟡 Medio</option>
+                                    <option value="hard">🔴 Difícil</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="category" class="form-label">Categoría</label>
+                                <input type="text" class="form-control" id="category" name="category" required>
+                                <div class="form-text">Ej: Arrays, Recursión, BFS, Dynamic Programming</div>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">Agregar Problema</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5 class="mb-0">📄 Subir Problemas desde CSV</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" action="/admin/upload-csv" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label for="csv_file" class="form-label">Archivo CSV</label>
+                                <input type="file" class="form-control" id="csv_file" name="csv_file" accept=".csv" required>
+                                <div class="form-text">
+                                    El CSV debe contener las columnas: <br>
+                                    <code>Name, Link, Difficulty, Category</code>
+                                </div>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-success">
+                                    📤 Subir CSV
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <div class="mt-3">
+                            <small class="text-muted">
+                                <strong>Nota:</strong> Se omitirán automáticamente los problemas duplicados basándose en la URL.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Información del Sistema</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <a href="/admin/history" class="btn btn-outline-secondary">
+                                📊 Ver Historial Mensual
+                            </a>
+                        </div>
+                        
+                        <div class="mt-3">
+                            <small class="text-muted">
+                                <strong>Nota:</strong> El sistema automáticamente cambia de mes basándose en la fecha actual. Los problemas persisten entre meses, pero el progreso y ranking se reinician mensualmente.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        {% if problems %}
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Problemas Activos ({{ problems|length }})</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Título</th>
+                                <th>Dificultad</th>
+                                <th>Categoría</th>
+                                <th>Creado</th>
+                                <th>Enlaces</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for problem in problems %}
+                            <tr>
+                                <td>
+                                    <strong>{{ problem.title }}</strong>
+                                </td>
+                                <td>
+                                    {% if problem.difficulty == "easy" %}
+                                    <span class="badge bg-success">🟢 Fácil</span>
+                                    {% elif problem.difficulty == "medium" %}
+                                    <span class="badge bg-warning">🟡 Medio</span>
+                                    {% else %}
+                                    <span class="badge bg-danger">🔴 Difícil</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if problem.category %}
+                                    <span class="badge bg-info">{{ problem.category }}</span>
+                                    {% else %}
+                                    <small class="text-muted">-</small>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <small class="text-muted">{{ problem.created_at.strftime("%d/%m/%Y") }}</small>
+                                </td>
+                                <td>
+                                    <a href="{{ problem.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                        LeetCode
+                                    </a>
+                                    {% if problem.solution_url %}
+                                    <a href="{{ problem.solution_url }}" target="_blank" class="btn btn-sm btn-outline-success">
+                                        Solución
+                                    </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="alert alert-warning">
+            <strong>No hay problemas activos</strong> - Agrega el primer problema del mes usando el formulario arriba.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+{% endblock %}

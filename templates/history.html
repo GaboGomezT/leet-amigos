@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Historial Mensual - LeetCode Amigos{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1 class="mb-4">📊 Historial Mensual</h1>
+        
+        <div class="mb-3">
+            <a href="/admin" class="btn btn-outline-secondary">
+                ← Volver al Panel Admin
+            </a>
+        </div>
+        
+        {% if monthly_stats %}
+        {% for month_data in monthly_stats %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    📅 {{ month_data.month }} 
+                    <span class="badge bg-secondary">{{ month_data.total_participants }} participantes</span>
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if month_data.users %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Posición</th>
+                                <th>Usuario</th>
+                                <th>Problemas Resueltos</th>
+                                <th>Puntos Totales</th>
+                                <th>Promedio</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in month_data.users %}
+                            <tr {% if loop.index <= 3 %}class="table-warning"{% endif %}>
+                                <td>
+                                    {% if loop.index == 1 %}
+                                    <span class="badge bg-warning">🥇 1°</span>
+                                    {% elif loop.index == 2 %}
+                                    <span class="badge bg-secondary">🥈 2°</span>
+                                    {% elif loop.index == 3 %}
+                                    <span class="badge bg-dark">🥉 3°</span>
+                                    {% else %}
+                                    <span class="badge bg-light text-dark">{{ loop.index }}°</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <strong>{{ user.username }}</strong>
+                                </td>
+                                <td>
+                                    <span class="badge bg-primary">{{ user.solved }}</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-success">{{ user.points }}</span>
+                                </td>
+                                <td>
+                                    {% if user.solved > 0 %}
+                                    <small class="text-muted">{{ "%.1f"|format(user.points / user.solved) }}</small>
+                                    {% else %}
+                                    <small class="text-muted">0.0</small>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <strong>No hay datos para este mes</strong> - Ningún usuario resolvió problemas en {{ month_data.month }}.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="alert alert-info">
+            <strong>No hay historial disponible</strong> - Aún no hay datos de meses anteriores.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

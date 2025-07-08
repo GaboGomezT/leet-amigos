@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Mi Progreso - LeetCode Amigos{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1 class="mb-4">📊 Mi Progreso</h1>
+        
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Problemas Resueltos</h5>
+                        <h2 class="text-primary">{{ total_solved }}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Puntos Totales</h5>
+                        <h2 class="text-success">{{ total_points }}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Promedio</h5>
+                        <h2 class="text-warning">
+                            {% if total_solved > 0 %}
+                            {{ "%.1f"|format(total_points / total_solved) }}
+                            {% else %}
+                            0.0
+                            {% endif %}
+                        </h2>
+                        <small class="text-muted">puntos por problema</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        {% if solved_problems %}
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Problemas Resueltos</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Problema</th>
+                                <th>Dificultad</th>
+                                <th>Categoría</th>
+                                <th>Puntos</th>
+                                <th>Resuelto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in solved_problems %}
+                            <tr>
+                                <td>
+                                    <strong>{{ item.problem.title }}</strong>
+                                </td>
+                                <td>
+                                    {% if item.problem.difficulty == "easy" %}
+                                    <span class="badge bg-success">🟢 Fácil</span>
+                                    {% elif item.problem.difficulty == "medium" %}
+                                    <span class="badge bg-warning">🟡 Medio</span>
+                                    {% else %}
+                                    <span class="badge bg-danger">🔴 Difícil</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if item.problem.category %}
+                                    <span class="badge bg-info">{{ item.problem.category }}</span>
+                                    {% else %}
+                                    <span class="badge bg-light text-dark">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge bg-primary">{{ item.points }}</span>
+                                </td>
+                                <td>
+                                    {% if item.solved_at %}
+                                    <small class="text-muted">{{ item.solved_at.strftime("%d/%m/%Y") }}</small>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            <strong>¡Aún no has resuelto ningún problema!</strong> 
+            <a href="/" class="alert-link">Ve a la página principal</a> para comenzar.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

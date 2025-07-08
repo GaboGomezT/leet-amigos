@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}Tabla de Posiciones - LeetCode Amigos{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1 class="mb-4">🏆 Tabla de Posiciones</h1>
+        
+        {% if current_month_name %}
+        <div class="mb-3">
+            <h5 class="text-muted">{{ current_month_name }}</h5>
+        </div>
+        {% endif %}
+        
+        <!-- Mode Toggle Buttons -->
+        <div class="mb-4">
+            <div class="btn-group" role="group" aria-label="Ranking Mode">
+                <a href="/ranking?mode=points" class="btn {% if current_mode == 'points' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                    🏆 Más Puntos
+                </a>
+                <a href="/ranking?mode=problems" class="btn {% if current_mode == 'problems' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                    📊 Más Problemas
+                </a>
+            </div>
+        </div>
+        
+        {% if user_stats %}
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    {% if current_mode == 'problems' %}
+                        📊 Ranking por Problemas Resueltos
+                    {% else %}
+                        🏆 Ranking por Puntos Acumulados
+                    {% endif %}
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Posición</th>
+                                <th>Usuario</th>
+                                <th {% if current_mode == 'problems' %}class="table-active"{% endif %}>
+                                    Problemas Resueltos
+                                    {% if current_mode == 'problems' %}
+                                        <span class="badge bg-primary ms-1">Ordenado</span>
+                                    {% endif %}
+                                </th>
+                                <th {% if current_mode == 'points' %}class="table-active"{% endif %}>
+                                    Puntos Totales
+                                    {% if current_mode == 'points' %}
+                                        <span class="badge bg-primary ms-1">Ordenado</span>
+                                    {% endif %}
+                                </th>
+                                <th>Promedio</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user_stat in user_stats %}
+                            <tr {% if loop.index <= 3 %}class="table-warning"{% endif %}>
+                                <td>
+                                    {% if loop.index == 1 %}
+                                    <span class="badge bg-warning">🥇 1°</span>
+                                    {% elif loop.index == 2 %}
+                                    <span class="badge bg-secondary">🥈 2°</span>
+                                    {% elif loop.index == 3 %}
+                                    <span class="badge bg-dark">🥉 3°</span>
+                                    {% else %}
+                                    <span class="badge bg-light text-dark">{{ loop.index }}°</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <strong>{{ user_stat.user.username }}</strong>
+                                </td>
+                                <td {% if current_mode == 'problems' %}class="table-active"{% endif %}>
+                                    <span class="badge bg-primary">{{ user_stat.solved_count }}</span>
+                                </td>
+                                <td {% if current_mode == 'points' %}class="table-active"{% endif %}>
+                                    <span class="badge bg-success">{{ user_stat.points }}</span>
+                                </td>
+                                <td>
+                                    {% if user_stat.solved_count > 0 %}
+                                    <small class="text-muted">{{ "%.1f"|format(user_stat.points / user_stat.solved_count) }}</small>
+                                    {% else %}
+                                    <small class="text-muted">0.0</small>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-title">🎯 Sistema de Puntuación</h6>
+                    <ul class="list-unstyled mb-0">
+                        <li><span class="badge bg-success">🟢 Fácil</span> = 1 punto</li>
+                        <li><span class="badge bg-warning">🟡 Medio</span> = 2 puntos</li>
+                        <li><span class="badge bg-danger">🔴 Difícil</span> = 3 puntos</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            <strong>No hay usuarios registrados aún</strong> - ¡Sé el primero en registrarte y comenzar a resolver problemas!
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add smooth transition when switching modes
+    const modeButtons = document.querySelectorAll('.btn-group a');
+    
+    modeButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            // Add loading state
+            const activeButton = document.querySelector('.btn-group .btn-primary');
+            if (activeButton) {
+                activeButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>' + activeButton.textContent;
+            }
+        });
+    });
+    
+    // Add hover effects for better UX
+    const tableRows = document.querySelectorAll('tbody tr');
+    tableRows.forEach(row => {
+        row.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.01)';
+            this.style.transition = 'transform 0.2s ease';
+        });
+        
+        row.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+        });
+    });
+});
+</script>
+{% endblock %}

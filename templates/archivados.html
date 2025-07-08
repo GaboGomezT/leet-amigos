@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Problemas Archivados - LeetCode Amigos{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1 class="mb-4">📁 Problemas Archivados</h1>
+        
+        <div class="mb-3">
+            <a href="/admin" class="btn btn-outline-secondary">
+                ← Volver al Panel Admin
+            </a>
+        </div>
+        
+        {% if problems_by_month %}
+        {% for month, problems in problems_by_month.items() %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    📅 {{ month }} 
+                    <span class="badge bg-secondary">{{ problems|length }} problemas</span>
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Título</th>
+                                <th>Dificultad</th>
+                                <th>Categoría</th>
+                                <th>Creado</th>
+                                <th>Enlaces</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for problem in problems %}
+                            <tr>
+                                <td>
+                                    <strong>{{ problem.title }}</strong>
+                                </td>
+                                <td>
+                                    {% if problem.difficulty == "easy" %}
+                                    <span class="badge bg-success">🟢 Fácil</span>
+                                    {% elif problem.difficulty == "medium" %}
+                                    <span class="badge bg-warning">🟡 Medio</span>
+                                    {% else %}
+                                    <span class="badge bg-danger">🔴 Difícil</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if problem.category %}
+                                    <span class="badge bg-info">{{ problem.category }}</span>
+                                    {% else %}
+                                    <span class="badge bg-light text-dark">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <small class="text-muted">{{ problem.created_at.strftime("%d/%m/%Y") }}</small>
+                                </td>
+                                <td>
+                                    <a href="{{ problem.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                        LeetCode
+                                    </a>
+                                    {% if problem.solution_url %}
+                                    <a href="{{ problem.solution_url }}" target="_blank" class="btn btn-sm btn-outline-success">
+                                        Solución
+                                    </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="alert alert-info">
+            <strong>No hay problemas archivados</strong> - Cuando archives un mes, los problemas aparecerán aquí.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
